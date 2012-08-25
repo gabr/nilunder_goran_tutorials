@@ -24,10 +24,7 @@ while True:
 
     if user_input.isdigit():
         idx = int(user_input)
-        if idx < len(board):
-            if board_visible[idx] != "_":
-                print " ! you cant turn this card"
-                continue
+        if idx < len(board) and board_visible[idx] == "_":
             board_visible[idx] = board[idx]
             flipped.append(idx)
             continue
