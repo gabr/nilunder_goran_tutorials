@@ -3,20 +3,20 @@
 
 import random
 
-class Board:
+class Board(list):
 
     def __init__(self, cells):
 
-        self.cells = cells
+        super(Board, self).__init__(cells)
 
     def __str__(self):
 
-        return " ".join([str(c) for c in self.cells]) +\
+        return " ".join([str(c) for c in self]) +\
                 "\n0 1 2 3 4 5 6 7"
 
     def isCompleted(self):
 
-        for cell in self.cells:
+        for cell in self:
             if cell.isCovered():
                 return False
         return True
@@ -51,7 +51,10 @@ class Cell:
 
         return self.image == '_'
 
-board = [Cell(c) for c in ['A', 'B', 'C', 'D'] * 2]
+###############################################################################
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+board = Board([Cell(c) for c in ['A', 'B', 'C', 'D'] * 2])
 
 steps = 0
 
@@ -59,13 +62,7 @@ random.shuffle(board)   # miksuje elementy listy
 
 flipped = []
 
-def printBoard(board):
-    
-    print "",
-    for cell in board:
-        print cell,
-    print "\n 0 1 2 3 4 5 6 7"
-
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 def inputIsValid(str_input):
 
@@ -80,12 +77,14 @@ def flip(idx):
         steps += 1
     board[idx].flip()
 
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 if __name__ == "__main__":
     while True:
 
-        printBoard(board)
+        print board
 
-        if boardIsComplete(board):
+        if board.isCompleted():
             print " > You win in: %d steps" % steps
             break
 
@@ -107,3 +106,6 @@ if __name__ == "__main__":
             flipped.append(idx)
         else:
             print " ! wrong input"
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+###############################################################################
