@@ -3,6 +3,32 @@
 
 import random
 
+class Player:
+
+    def __init__(self):
+
+        self.steps = 0
+        self.flipped = []
+
+    def flipCell(self, cell):
+
+        cell.flip()
+        self.steps += 1
+        self.flipped.append(cell)
+
+    def flippedNewPair(self):
+
+        return len(self.flipped) == 2
+
+    def getPair(self):
+
+        return (self.flipped.pop(), self.flipped.pop())
+
+    def coverPair(self, cell_pair):
+
+        for cell in cell_pair:
+            cell.flip()
+
 class Board(list):
 
     def __init__(self, cells):
@@ -54,13 +80,11 @@ class Cell:
 ###############################################################################
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+player = Player()
+
 board = Board([Cell(c) for c in ['A', 'B', 'C', 'D'] * 2])
 
-steps = 0
-
 random.shuffle(board)   # miksuje elementy listy
-
-flipped = []
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -70,13 +94,6 @@ def inputIsValid(str_input):
             int(str_input) < len(board) and \
             board[int(str_input)].isCovered()
 
-def flip(idx):
-    
-    global steps
-    if board[idx].isCovered:
-        steps += 1
-    board[idx].flip()
-
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 if __name__ == "__main__":
@@ -85,14 +102,13 @@ if __name__ == "__main__":
         print board
 
         if board.isCompleted():
-            print " > You win in: %d steps" % steps
+            print " > You win in: %d steps" % player.steps
             break
 
-        if len(flipped) == 2:
-            a, b = [board[i] for i in flipped]
+        if player.flippedNewPair():
+            a, b = player.getPair()
             if a != b:
-                for i in flipped: flip(i)
-            flipped = []
+                player.coverPair([a, b])
 
         user_input = raw_input(" : ")
 
@@ -102,8 +118,9 @@ if __name__ == "__main__":
         if inputIsValid(user_input):
 
             idx = int(user_input)
-            flip(idx)
-            flipped.append(idx)
+            cell = board[idx]
+            player.flipCell(cell)
+
         else:
             print " ! wrong input"
 
