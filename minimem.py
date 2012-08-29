@@ -14,6 +14,14 @@ class Cell:
 
         return self.image
 
+    def __eq__(self, other):
+
+        return self.image == other.image
+
+    def __ne__(self, other):
+
+        return not self.__eq__(other)
+
     def flip(self):
 
         if self.image == '_':
@@ -21,8 +29,11 @@ class Cell:
         else:
             self.image = '_'
 
-board_visible = list("________")
-board = ['A', 'B', 'C', 'D'] * 2
+    def isCovered(self):
+
+        return self.image == '_'
+
+board = [Cell(c) for c in ['A', 'B', 'C', 'D'] * 2]
 
 steps = 0
 
@@ -32,34 +43,36 @@ flipped = []
 
 def printBoard(board):
     
-    print " "+" ".join(board)
-    print " 0 1 2 3 4 5 6 7"
+    print "",
+    for cell in board:
+        print cell,
+    print "\n 0 1 2 3 4 5 6 7"
 
 def boardIsComplete(board):
 
-    return (not '_' in board)
+    for cell in board:
+        if cell.isCovered():
+            return False
+    return True
 
 def inputIsValid(str_input):
 
     return str_input.isdigit() and \
             int(str_input) < len(board) and \
-            board_visible[int(str_input)] == "_"
+            board[int(str_input)].isCovered()
 
 def flip(idx):
     
-    if board_visible[idx] == '_':
-        board_visible[idx] = board[idx]
-        global steps
+    global steps
+    if board[idx].isCovered:
         steps += 1
-        return
-
-    board_visible[idx] = "_"
+    board[idx].flip()
 
 while True:
 
-    printBoard(board_visible)
+    printBoard(board)
 
-    if boardIsComplete(board_visible):
+    if boardIsComplete(board):
         print " > You win in: %d steps" % steps
         break
 
