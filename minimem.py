@@ -3,6 +3,24 @@
 
 import random
 
+class Cell:
+
+    def __init__(self, char):
+
+        self.char  = char
+        self.image = '_'
+
+    def __str__(self):
+
+        return self.image
+
+    def flip(self):
+
+        if self.image == '_':
+            self.image = self.char
+        else:
+            self.image = '_'
+
 board_visible = list("________")
 board = ['A', 'B', 'C', 'D'] * 2
 
@@ -21,11 +39,22 @@ def boardIsComplete(board):
 
     return (not '_' in board)
 
-def inputIsValid():
+def inputIsValid(str_input):
 
-    return user_input.isdigit() and \
-            int(user_input) < len(board) and \
-            board_visible[int(user_input)] == "_"
+    return str_input.isdigit() and \
+            int(str_input) < len(board) and \
+            board_visible[int(str_input)] == "_"
+
+def flip(idx):
+    
+    if board_visible[idx] == '_':
+        board_visible[idx] = board[idx]
+        global steps
+        steps += 1
+        return
+
+    board_visible[idx] = "_"
+
 while True:
 
     printBoard(board_visible)
@@ -37,8 +66,7 @@ while True:
     if len(flipped) == 2:
         a, b = [board[i] for i in flipped]
         if a != b:
-            for i in flipped:
-                board_visible[i] = "_"
+            for i in flipped: flip(i)
         flipped = []
 
     user_input = raw_input(" : ")
@@ -46,11 +74,10 @@ while True:
     if user_input == 'q':
         break
 
-    if inputIsValid():
+    if inputIsValid(user_input):
 
         idx = int(user_input)
-        board_visible[idx] = board[idx]
+        flip(idx)
         flipped.append(idx)
-        steps += 1
     else:
         print " ! wrong input"
