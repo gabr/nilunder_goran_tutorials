@@ -3,6 +3,24 @@
 
 import random
 
+class Board:
+
+    def __init__(self, cells):
+
+        self.cells = cells
+
+    def __str__(self):
+
+        return " ".join([str(c) for c in self.cells]) +\
+                "\n0 1 2 3 4 5 6 7"
+
+    def isCompleted(self):
+
+        for cell in self.cells:
+            if cell.isCovered():
+                return False
+        return True
+
 class Cell:
 
     def __init__(self, char):
@@ -48,12 +66,6 @@ def printBoard(board):
         print cell,
     print "\n 0 1 2 3 4 5 6 7"
 
-def boardIsComplete(board):
-
-    for cell in board:
-        if cell.isCovered():
-            return False
-    return True
 
 def inputIsValid(str_input):
 
@@ -68,29 +80,30 @@ def flip(idx):
         steps += 1
     board[idx].flip()
 
-while True:
+if __name__ == "__main__":
+    while True:
 
-    printBoard(board)
+        printBoard(board)
 
-    if boardIsComplete(board):
-        print " > You win in: %d steps" % steps
-        break
+        if boardIsComplete(board):
+            print " > You win in: %d steps" % steps
+            break
 
-    if len(flipped) == 2:
-        a, b = [board[i] for i in flipped]
-        if a != b:
-            for i in flipped: flip(i)
-        flipped = []
+        if len(flipped) == 2:
+            a, b = [board[i] for i in flipped]
+            if a != b:
+                for i in flipped: flip(i)
+            flipped = []
 
-    user_input = raw_input(" : ")
+        user_input = raw_input(" : ")
 
-    if user_input == 'q':
-        break
+        if user_input == 'q':
+            break
 
-    if inputIsValid(user_input):
+        if inputIsValid(user_input):
 
-        idx = int(user_input)
-        flip(idx)
-        flipped.append(idx)
-    else:
-        print " ! wrong input"
+            idx = int(user_input)
+            flip(idx)
+            flipped.append(idx)
+        else:
+            print " ! wrong input"
