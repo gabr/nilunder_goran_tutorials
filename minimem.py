@@ -72,17 +72,18 @@ class Board(list):
         for i, cell in enumerate(self): cell.setIndex(i)
 
     def __str__(self):
-        return "".join(["~" for line in range(38)])\
-                +"\n"+"\n".join([line for line in self._getLines(0,3)])\
-                +"\n"+"".join(["~" for line in range(38)])\
-                +"\n"+"\n".join([line for line in self._getLines(3,6)])\
-                +"\n"+"".join(["~" for line in range(38)])\
-                +"\n"+"\n".join([line for line in self._getLines(6,8)])
+        return "\n".join([line for line in self._lines()])
 
-    def _getLines(self, start, stop):
-        iters = [iter(cell) for cell in self[start:stop]]
-        while True:
-            yield " ".join([next(itr) for itr in iters])
+    def _lines(self):
+        for chunk in self._chunks(3):
+            iters = [iter(cell) for cell in chunk]
+            for s in iters.pop():
+                    yield "  ".join([next(itr) for itr in iters]+[s])
+            yield ""
+
+    def _chunks(self, len_chunk):
+        for i in range(0, len(self), len_chunk):
+            yield self[i:i+len_chunk]
 
     def isCompleted(self):
         for cell in self:
